@@ -1,0 +1,13 @@
+body {
+  margin: 0;
+}
+
+#main {
+  display: flex;
+}
+
+#html,
+#elm {
+  flex: 1;
+  height: 100vh;
+}
