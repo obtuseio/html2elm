@@ -2,6 +2,8 @@ module Main exposing (..)
 
 import Html exposing (Html, div, text)
 import Html.Attributes exposing (id)
+import Json.Decode exposing (Value)
+import Json.Encode
 import Ports
 
 
@@ -11,7 +13,7 @@ main =
         { init = init
         , view = view
         , update = update
-        , subscriptions = always Sub.none
+        , subscriptions = \_ -> Ports.receive Receive
         }
 
 
@@ -20,12 +22,12 @@ main =
 
 
 type alias Model =
-    ()
+    String
 
 
 init : ( Model, Cmd Msg )
 init =
-    () ! [ Ports.init () ]
+    "" ! [ Ports.init () ]
 
 
 
@@ -33,12 +35,14 @@ init =
 
 
 type Msg
-    = Msg
+    = Receive Value
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    model ! []
+    case msg of
+        Receive value ->
+            Json.Encode.encode 2 value ! []
 
 
 
@@ -50,4 +54,5 @@ view model =
     div [ id "main" ]
         [ div [ id "html" ] []
         , div [ id "elm" ] []
+        , div [] [ text model ]
         ]
