@@ -86,7 +86,12 @@ view model =
                     , onClick (Toggle Generate.Trim)
                     ]
                     [ text "Trim Text Nodes?" ]
-                , div [ class "ui tiny button" ] [ text "Collapse Consecutive Whitespace in Text Nodes?" ]
+                , div
+                    [ class "ui tiny button"
+                    , classList [ ( "green", model.options.collapse ) ]
+                    , onClick (Toggle Generate.Collapse)
+                    ]
+                    [ text "Collapse Consecutive Whitespace in Text Nodes?" ]
                 ]
             ]
         , div [ class "row expand" ]
