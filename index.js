@@ -6,15 +6,13 @@ const app = Elm.Main.embed(document.querySelector('#app'));
 const parse = html => {
   const parser = new DOMParser();
   const document = parser.parseFromString(html.trim(), 'text/html');
-  if (document.body.childNodes.length === 0) {
-    return {type: 'error', value: 'root node is empty'};
-  }
-  if (document.body.childNodes.length > 1) {
+  const childNodes = document.body.childNodes;
+  if (
+    childNodes.length === 0 ||
+    childNodes.length > 1 ||
+    childNodes[0].nodeType !== Node.ELEMENT_NODE
+  ) {
     return parse(`<div>${html}</div>`);
-  }
-  const firstChild = document.body.firstChild;
-  if (firstChild.nodeType !== Node.ELEMENT_NODE) {
-    return {type: 'error', value: 'root node is not an element'};
   }
 
   function recur(node) {
@@ -40,7 +38,7 @@ const parse = html => {
     }
   }
 
-  return recur(firstChild);
+  return recur(childNodes[0]);
 };
 
 app.ports.init.subscribe(() => {

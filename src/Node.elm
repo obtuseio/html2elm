@@ -43,9 +43,6 @@ decoder =
                     "text" ->
                         Decode.map Text <| Decode.field "value" Decode.string
 
-                    "error" ->
-                        Decode.field "value" Decode.string |> Decode.andThen Decode.fail
-
                     _ ->
                         Decode.fail "this is impossible!"
             )
