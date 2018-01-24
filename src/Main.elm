@@ -52,7 +52,11 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div [ id "main" ]
-        [ div [ id "html" ] []
-        , div [ id "elm" ] []
-        , div [] [ text model ]
+        [ div []
+            [ div [ id "html" ] []
+            ]
+        , div []
+            [ div [ id "elm" ] []
+            , div [] [ text model ]
+            ]
         ]

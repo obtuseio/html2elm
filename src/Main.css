@@ -6,8 +6,14 @@ body {
   display: flex;
 }
 
-#html,
-#elm {
+#main > * {
+  display: flex;
+  flex-direction: column;
   flex: 1;
   height: 100vh;
+}
+
+#elm,
+#html {
+  flex: 1;
 }
