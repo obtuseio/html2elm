@@ -52,6 +52,7 @@ app.ports.init.subscribe(() => {
 
   const elm = ace.edit('elm');
   elm.session.setMode('ace/mode/elm');
+  elm.setReadOnly(true);
 });
 
 app.ports.send.subscribe(elm => {
