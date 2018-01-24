@@ -23,13 +23,12 @@ main =
 
 
 type alias Model =
-    { error : Maybe String
-    }
+    ()
 
 
 init : ( Model, Cmd Msg )
 init =
-    { error = Nothing } ! [ Ports.init () ]
+    () ! [ Ports.init () ]
 
 
 
@@ -46,10 +45,11 @@ update msg model =
         Receive value ->
             case Node.decodeValue value of
                 Ok node ->
-                    { model | error = Nothing } ! [ Ports.send <| Generate.generate node ]
+                    model ! [ Ports.send <| Generate.generate node ]
 
-                Err error ->
-                    { model | error = Just error } ! []
+                -- This should never be triggered.
+                Err _ ->
+                    model ! []
 
 
 
