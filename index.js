@@ -22,9 +22,14 @@ const parse = html => {
       case Node.COMMENT_NODE:
         return {type: 'comment', value: node.nodeValue};
       case Node.ELEMENT_NODE:
-        const ret = {type: 'element', attributes: [], children: []};
+        const ret = {
+          type: 'element',
+          name: node.nodeName.toLowerCase(),
+          attributes: [],
+          children: [],
+        };
         for (const name of node.getAttributeNames()) {
-          ret.attributes.push([name, node.getAttribute(name)]);
+          ret.attributes.push({name, value: node.getAttribute(name)});
         }
         for (const childNode of node.childNodes) {
           ret.children.push(recur(childNode));
