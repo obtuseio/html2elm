@@ -10,7 +10,7 @@ const parse = html => {
     return {type: 'error', value: 'root node is empty'};
   }
   if (document.body.childNodes.length > 1) {
-    return {type: 'error', value: 'root node has more than one child'};
+    return parse(`<div>${html}</div>`);
   }
   const firstChild = document.body.firstChild;
   if (firstChild.nodeType !== Node.ELEMENT_NODE) {
