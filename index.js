@@ -1,5 +1,7 @@
 import Elm from './src/Main.elm';
 import './src/Main.css';
+import './node_modules/semantic-ui-css/components/button.css';
+import './node_modules/semantic-ui-css/components/site.css';
 
 const app = Elm.Main.embed(document.querySelector('#app'));
 

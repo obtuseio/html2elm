@@ -3,18 +3,31 @@ body {
 }
 
 #main {
-  display: flex;
-}
-
-#main > * {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
   height: 100vh;
 }
 
-#elm,
-#html {
+#header {
+  padding: 1rem;
+}
+
+#main h1 {
+  margin: 0;
+}
+
+.row {
+  display: flex;
+}
+
+.row.middle {
+  align-items: center;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+}
+
+.expand {
   flex: 1;
 }
 

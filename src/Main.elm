@@ -1,8 +1,8 @@
 module Main exposing (..)
 
 import Generate
-import Html exposing (Html, div, text)
-import Html.Attributes exposing (id)
+import Html exposing (Html, div, h1, text)
+import Html.Attributes exposing (class, id)
 import Json.Decode exposing (Value)
 import Node exposing (Node)
 import Ports
@@ -58,12 +58,16 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div [ id "main" ]
-        [ div []
-            [ div [ id "html" ] []
+    div [ id "main", class "column" ]
+        [ div [ id "header", class "row middle" ]
+            [ h1 [ class "expand" ] [ text "html2elm.obtuse.io" ]
+            , div []
+                [ div [ class "ui tiny green button" ] [ text "Remove Empty Text Nodes?" ]
+                , div [ class "ui tiny button" ] [ text "Collapse Consecutive Whitespace in Text Nodes?" ]
+                ]
             ]
-        , div []
-            [ div [ id "elm" ] []
-            , div [] [ text <| toString model ]
+        , div [ class "row expand" ]
+            [ div [ id "html", class "expand" ] []
+            , div [ id "elm", class "expand" ] []
             ]
         ]
