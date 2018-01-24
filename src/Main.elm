@@ -3,7 +3,7 @@ module Main exposing (..)
 import Html exposing (Html, div, text)
 import Html.Attributes exposing (id)
 import Json.Decode exposing (Value)
-import Json.Encode
+import Node exposing (Node)
 import Ports
 
 
@@ -22,12 +22,12 @@ main =
 
 
 type alias Model =
-    String
+    Result String Node
 
 
 init : ( Model, Cmd Msg )
 init =
-    "" ! [ Ports.init () ]
+    Err "" ! [ Ports.init () ]
 
 
 
@@ -42,7 +42,7 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Receive value ->
-            Json.Encode.encode 2 value ! []
+            Node.decodeValue value ! []
 
 
 
@@ -57,6 +57,6 @@ view model =
             ]
         , div []
             [ div [ id "elm" ] []
-            , div [] [ text model ]
+            , div [] [ text <| toString model ]
             ]
         ]
