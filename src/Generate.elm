@@ -1,10 +1,31 @@
-module Generate exposing (generate)
+module Generate exposing (..)
 
 import Node exposing (..)
 
 
-generate : Node -> String
-generate node =
+type alias Options =
+    { removeEmpty : Bool
+    }
+
+
+type Option
+    = RemoveEmpty
+
+
+toggle : Option -> Options -> Options
+toggle option options =
+    case option of
+        RemoveEmpty ->
+            { options | removeEmpty = not options.removeEmpty }
+
+
+default : Options
+default =
+    Options True
+
+
+generate : Node -> Options -> String
+generate node options =
     case node of
         Comment value ->
             value
@@ -27,6 +48,15 @@ generate node =
 
                 c =
                     children
+                        |> List.filter
+                            (\node ->
+                                case ( options.removeEmpty, node ) of
+                                    ( True, Text value ) ->
+                                        String.trim value /= ""
+
+                                    _ ->
+                                        True
+                            )
                         |> List.indexedMap
                             (\i node ->
                                 let
@@ -41,7 +71,7 @@ generate node =
                                             _ ->
                                                 ", "
                                 in
-                                prefix ++ generate node
+                                prefix ++ generate node options
                             )
                         |> String.join "\n"
 

@@ -2,7 +2,8 @@ module Main exposing (..)
 
 import Generate
 import Html exposing (Html, div, h1, text)
-import Html.Attributes exposing (class, id)
+import Html.Attributes exposing (class, classList, id)
+import Html.Events exposing (onClick)
 import Json.Decode exposing (Value)
 import Node exposing (Node)
 import Ports
@@ -23,12 +24,14 @@ main =
 
 
 type alias Model =
-    ()
+    { node : Node
+    , options : Generate.Options
+    }
 
 
 init : ( Model, Cmd Msg )
 init =
-    () ! [ Ports.init () ]
+    Model (Node.Text "") Generate.default ! [ Ports.init () ]
 
 
 
@@ -37,6 +40,12 @@ init =
 
 type Msg
     = Receive Value
+    | Toggle Generate.Option
+
+
+refresh : Model -> ( Model, Cmd Msg )
+refresh model =
+    model ! [ Ports.send <| Generate.generate model.node model.options ]
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -45,11 +54,14 @@ update msg model =
         Receive value ->
             case Node.decodeValue value of
                 Ok node ->
-                    model ! [ Ports.send <| Generate.generate node ]
+                    refresh { model | node = node }
 
                 -- This should never be triggered.
                 Err _ ->
                     model ! []
+
+        Toggle option ->
+            refresh { model | options = Generate.toggle option model.options }
 
 
 
@@ -62,7 +74,12 @@ view model =
         [ div [ id "header", class "row middle" ]
             [ h1 [ class "expand" ] [ text "html2elm.obtuse.io" ]
             , div []
-                [ div [ class "ui tiny green button" ] [ text "Remove Empty Text Nodes?" ]
+                [ div
+                    [ class "ui tiny button"
+                    , classList [ ( "green", model.options.removeEmpty ) ]
+                    , onClick (Toggle Generate.RemoveEmpty)
+                    ]
+                    [ text "Remove Empty Text Nodes?" ]
                 , div [ class "ui tiny button" ] [ text "Collapse Consecutive Whitespace in Text Nodes?" ]
                 ]
             ]
