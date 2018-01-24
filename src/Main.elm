@@ -1,5 +1,6 @@
 module Main exposing (..)
 
+import Generate
 import Html exposing (Html, div, text)
 import Html.Attributes exposing (id)
 import Json.Decode exposing (Value)
@@ -22,12 +23,13 @@ main =
 
 
 type alias Model =
-    Result String Node
+    { error : Maybe String
+    }
 
 
 init : ( Model, Cmd Msg )
 init =
-    Err "" ! [ Ports.init () ]
+    { error = Nothing } ! [ Ports.init () ]
 
 
 
@@ -42,7 +44,12 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Receive value ->
-            Node.decodeValue value ! []
+            case Node.decodeValue value of
+                Ok node ->
+                    model ! [ Ports.send <| Generate.generate node ]
+
+                Err error ->
+                    { model | error = Just error } ! []
 
 
 

@@ -53,3 +53,9 @@ app.ports.init.subscribe(() => {
   const elm = ace.edit('elm');
   elm.session.setMode('ace/mode/elm');
 });
+
+app.ports.send.subscribe(elm => {
+  const editor = ace.edit('elm');
+  editor.setValue(elm);
+  editor.clearSelection();
+});
