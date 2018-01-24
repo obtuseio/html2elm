@@ -46,7 +46,7 @@ update msg model =
         Receive value ->
             case Node.decodeValue value of
                 Ok node ->
-                    model ! [ Ports.send <| Generate.generate node ]
+                    { model | error = Nothing } ! [ Ports.send <| Generate.generate node ]
 
                 Err error ->
                     { model | error = Just error } ! []
