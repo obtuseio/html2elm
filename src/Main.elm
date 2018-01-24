@@ -80,6 +80,12 @@ view model =
                     , onClick (Toggle Generate.RemoveEmpty)
                     ]
                     [ text "Remove Empty Text Nodes?" ]
+                , div
+                    [ class "ui tiny button"
+                    , classList [ ( "green", model.options.trim ) ]
+                    , onClick (Toggle Generate.Trim)
+                    ]
+                    [ text "Trim Text Nodes?" ]
                 , div [ class "ui tiny button" ] [ text "Collapse Consecutive Whitespace in Text Nodes?" ]
                 ]
             ]

@@ -5,11 +5,13 @@ import Node exposing (..)
 
 type alias Options =
     { removeEmpty : Bool
+    , trim : Bool
     }
 
 
 type Option
     = RemoveEmpty
+    | Trim
 
 
 toggle : Option -> Options -> Options
@@ -18,10 +20,13 @@ toggle option options =
         RemoveEmpty ->
             { options | removeEmpty = not options.removeEmpty }
 
+        Trim ->
+            { options | trim = not options.trim }
+
 
 default : Options
 default =
-    Options True
+    Options True True
 
 
 generate : Node -> Options -> String
@@ -48,6 +53,15 @@ generate node options =
 
                 c =
                     children
+                        |> List.map
+                            (\node ->
+                                case ( options.trim, node ) of
+                                    ( True, Text value ) ->
+                                        Text <| String.trim value
+
+                                    _ ->
+                                        node
+                            )
                         |> List.filter
                             (\node ->
                                 case ( options.removeEmpty, node ) of
