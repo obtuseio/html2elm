@@ -46,6 +46,8 @@ const parse = html => {
 app.ports.init.subscribe(() => {
   const html = ace.edit('html');
   html.session.setMode('ace/mode/html');
+  // Disable warnings.
+  html.session.setUseWorker(false);
   html.getSession().on('change', function(e) {
     app.ports.receive.send(parse(html.getValue()));
   });
