@@ -1,8 +1,8 @@
 module Main exposing (..)
 
 import Generate
-import Html exposing (Html, div, h1, text)
-import Html.Attributes exposing (class, classList, id)
+import Html exposing (Html, a, div, h1, text)
+import Html.Attributes exposing (class, classList, href, id)
 import Html.Events exposing (onClick)
 import Json.Decode exposing (Value)
 import Node exposing (Node)
@@ -92,6 +92,11 @@ view model =
                     , onClick (Toggle Generate.Collapse)
                     ]
                     [ text "Collapse Consecutive Whitespace in Text Nodes?" ]
+                , a
+                    [ class "ui tiny black button"
+                    , href "https://github.com/obtuseio/html2elm"
+                    ]
+                    [ text "GitHub" ]
                 ]
             ]
         , div [ class "row expand" ]
