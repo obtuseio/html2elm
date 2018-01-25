@@ -1,5 +1,6 @@
 module Generate exposing (..)
 
+import Generate.List
 import Node exposing (..)
 import Regex
 import Set exposing (Set)
@@ -91,8 +92,9 @@ generate node options =
                                 else
                                     "attribute " ++ toString name ++ " " ++ toString value
                             )
-                        |> (\string -> string ++ b)
-                        |> String.join ", "
+                        |> (\lines -> lines ++ b)
+                        |> List.map Generate.List.Code
+                        |> Generate.List.toElm
 
                 d =
                     children
@@ -114,54 +116,18 @@ generate node options =
                                     _ ->
                                         True
                             )
-                        |> List.foldl
-                            (\node ( nodes, ( i, first ) ) ->
-                                let
-                                    prefix =
-                                        case ( node, i, first ) of
-                                            ( _, 0, _ ) ->
-                                                ""
+                        |> List.map
+                            (\node ->
+                                case node of
+                                    Comment value ->
+                                        Generate.List.Comment value
 
-                                            ( Comment _, _, _ ) ->
-                                                ""
-
-                                            ( _, _, True ) ->
-                                                "  "
-
-                                            _ ->
-                                                ", "
-
-                                    nextFirst =
-                                        case node of
-                                            Comment _ ->
-                                                first
-
-                                            _ ->
-                                                False
-                                in
-                                ( nodes ++ [ prefix ++ generate node options ], ( i + 1, nextFirst ) )
+                                    _ ->
+                                        Generate.List.Code (generate node options)
                             )
-                            ( [], ( 0, True ) )
-                        |> Tuple.first
-                        |> String.join "\n"
-
-                nested string newline =
-                    indent <|
-                        case ( string, newline ) of
-                            ( "", _ ) ->
-                                "[]"
-
-                            ( _, False ) ->
-                                "[ " ++ string ++ " ]"
-
-                            ( _, True ) ->
-                                "[ " ++ string ++ "\n]"
+                        |> Generate.List.toElm
             in
-            [ a
-            , nested c False
-            , nested d ((d |> String.lines |> List.length) > 1)
-            ]
-                |> String.join "\n"
+            [ a, indent c, indent d ] |> String.join "\n"
 
         Text value ->
             "text "
