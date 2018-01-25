@@ -2,6 +2,7 @@ module Generate exposing (..)
 
 import Node exposing (..)
 import Regex
+import Set exposing (Set)
 
 
 type alias Options =
@@ -47,7 +48,13 @@ generate node options =
         Element name attributes children ->
             let
                 a =
-                    "node " ++ toString name
+                    -- Special case.
+                    if name == "main" then
+                        "main_"
+                    else if Set.member name elements then
+                        name
+                    else
+                        "node " ++ toString name
 
                 b =
                     attributes
@@ -117,6 +124,27 @@ generate node options =
                      else
                         value
                     )
+
+
+
+-- From https://github.com/elm-lang/html/blob/76b88764512b0469182717609406fa9a224d253d/src/Html.elm#L5-L20
+-- $ curl https://raw.githubusercontent.com/elm-lang/html/76b88764512b0469182717609406fa9a224d253d/src/Html.elm | \
+--   grep '^[a-zA-Z0-9]\+ : List (Attribute msg) -> List (Html msg) -> Html msg$' | \
+--   cut -d: -f1 | sort | xargs
+
+
+elements : Set String
+elements =
+    Set.fromList <| String.words <| """
+        a abbr address article aside audio b bdi bdo blockquote body br
+        button canvas caption cite code col colgroup datalist dd del details
+        dfn div dl dt em embed fieldset figcaption figure footer form h1 h2
+        h3 h4 h5 h6 header hr i iframe img input ins kbd keygen label legend
+        li mark math menu menuitem meter nav object ol optgroup option output
+        p param pre progress q rp rt ruby s samp section select small source
+        span strong sub summary sup table tbody td textarea tfoot th thead
+        time tr track u ul var video wbr
+    """
 
 
 indent : String -> String
