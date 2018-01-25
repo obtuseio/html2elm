@@ -59,15 +59,16 @@ generate node options =
                 b =
                     case styles of
                         [] ->
-                            ""
+                            []
 
                         _ ->
-                            "style ["
+                            [ "style ["
                                 ++ (styles
                                         |> List.map (\( name, value ) -> "( " ++ toString name ++ ", " ++ toString value ++ " )")
                                         |> String.join ", "
                                    )
                                 ++ "]"
+                            ]
 
                 c =
                     attributes
@@ -90,7 +91,7 @@ generate node options =
                                 else
                                     "attribute " ++ toString name ++ " " ++ toString value
                             )
-                        |> (\string -> string ++ [ b ])
+                        |> (\string -> string ++ b)
                         |> String.join ", "
 
                 d =
