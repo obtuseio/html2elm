@@ -71,6 +71,8 @@ generate node options =
 
                                         Err _ ->
                                             "attribute " ++ toString name ++ " " ++ toString value
+                                else if Set.member name boolAttributes then
+                                    name ++ " True"
                                 else
                                     "attribute " ++ toString name ++ " " ++ toString value
                             )
@@ -189,6 +191,22 @@ intAttributes =
     Set.fromList <| String.words <| """
         cols colspan height maxlength minlength rows rowspan size span start
         tabindex width
+    """
+
+
+
+-- $ curl https://raw.githubusercontent.com/elm-lang/html/76b88764512b0469182717609406fa9a224d253d/src/Html/Attributes.elm | \
+--   grep '^[a-zA-Z]\+ : Bool -> Attribute msg$' | \
+--   cut -d: -f1 | sort | xargs
+
+
+boolAttributes : Set String
+boolAttributes =
+    Set.fromList <| String.words <| """
+        async autocomplete autofocus autoplay checked contenteditable
+        controls default defer disabled download hidden ismap loop multiple
+        novalidate readonly required reversed scoped seamless selected
+        spellcheck
     """
 
 
