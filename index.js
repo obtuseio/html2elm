@@ -57,6 +57,26 @@ app.ports.init.subscribe(() => {
     app.ports.receive.send(parse(html.getValue()));
   });
 
+  requestAnimationFrame(() => {
+    html.setValue(`<div id=container class=column>
+  <header>
+    <a href="/">Home</a>
+    <a href="/contact-us">Contact Us</a>
+  </header>
+    <main class=column>
+      <!-- TODO: Make this a <label>. -->
+      Name: <input required>
+      <!-- This one too. -->
+      Message: <textarea required rows=25 cols=80 data-validate=".{10,}"></textarea>
+    </main>
+    <footer class=row>
+      <!-- Do we really need this? -->
+      &copy; ${new Date().getFullYear()}
+    </footer>
+</div>`);
+    html.clearSelection();
+  });
+
   const elm = ace.edit('elm');
   elm.session.setMode('ace/mode/elm');
   elm.setReadOnly(true);
