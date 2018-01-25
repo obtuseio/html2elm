@@ -22,7 +22,7 @@ decodeValue =
     Decode.decodeValue decoder
 
 
-attributeOrStyleDecoder : Decoder Attribute
+attributeOrStyleDecoder : Decoder ( String, String )
 attributeOrStyleDecoder =
     Decode.map2 (,)
         (Decode.field "name" Decode.string)
