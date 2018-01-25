@@ -60,7 +60,15 @@ generate node options =
                     attributes
                         |> List.map
                             (\( name, value ) ->
-                                "attribute " ++ toString name ++ " " ++ toString value
+                                (if name == "type" then
+                                    "type_"
+                                 else if Set.member name stringAttributes then
+                                    name
+                                 else
+                                    "attribute " ++ toString name
+                                )
+                                    ++ " "
+                                    ++ toString value
                             )
                         |> String.join ", "
 
@@ -144,6 +152,25 @@ elements =
         p param pre progress q rp rt ruby s samp section select small source
         span strong sub summary sup table tbody td textarea tfoot th thead
         time tr track u ul var video wbr
+    """
+
+
+
+-- $ curl https://raw.githubusercontent.com/elm-lang/html/76b88764512b0469182717609406fa9a224d253d/src/Html/Attributes.elm | \
+--   grep '^[a-zA-Z]\+ : String -> Attribute msg$' | \
+--   cut -d: -f1 | sort | xargs
+
+
+stringAttributes : Set String
+stringAttributes =
+    Set.fromList <| String.words <| """
+        accept acceptCharset action align alt challenge charset cite class
+        content contextmenu coords datetime defaultValue dir downloadAs
+        draggable dropzone enctype for form formaction headers href hreflang
+        httpEquiv id itemprop keytype kind label lang language list manifest max
+        media method min name pattern ping placeholder poster preload pubdate
+        rel sandbox scope shape src srcdoc srclang step target title usemap
+        value wrap
     """
 
 
