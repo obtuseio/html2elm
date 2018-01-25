@@ -48,7 +48,7 @@ generate node options =
 
         Element name attributes styles children ->
             let
-                a =
+                name_ =
                     -- Special case.
                     if name == "main" then
                         "main_"
@@ -57,7 +57,7 @@ generate node options =
                     else
                         "node " ++ toString name
 
-                b =
+                styles_ =
                     case styles of
                         [] ->
                             []
@@ -71,7 +71,7 @@ generate node options =
                                 ++ " ]"
                             ]
 
-                c =
+                attributes_ =
                     attributes
                         |> List.filter (\( name, _ ) -> name /= "style")
                         |> List.map
@@ -92,11 +92,11 @@ generate node options =
                                 else
                                     "attribute " ++ toString name ++ " " ++ toString value
                             )
-                        |> (\lines -> lines ++ b)
+                        |> (\lines -> lines ++ styles_)
                         |> List.map Generate.List.Code
                         |> Generate.List.toElm
 
-                d =
+                children_ =
                     children
                         |> List.map
                             (\node ->
@@ -127,7 +127,7 @@ generate node options =
                             )
                         |> Generate.List.toElm
             in
-            [ a, indent c, indent d ] |> String.join "\n"
+            [ name_, indent attributes_, indent children_ ] |> String.join "\n"
 
         Text value ->
             "text "
