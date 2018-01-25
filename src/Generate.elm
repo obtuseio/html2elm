@@ -62,12 +62,12 @@ generate node options =
                             []
 
                         _ ->
-                            [ "style ["
+                            [ "style [ "
                                 ++ (styles
                                         |> List.map (\( name, value ) -> "( " ++ toString name ++ ", " ++ toString value ++ " )")
                                         |> String.join ", "
                                    )
-                                ++ "]"
+                                ++ " ]"
                             ]
 
                 c =
