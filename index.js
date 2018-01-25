@@ -27,12 +27,16 @@ const parse = html => {
           name: node.nodeName.toLowerCase(),
           attributes: [],
           children: [],
+          styles: [],
         };
         for (const name of node.getAttributeNames()) {
           ret.attributes.push({name, value: node.getAttribute(name)});
         }
         for (const childNode of node.childNodes) {
           ret.children.push(recur(childNode));
+        }
+        for (const name of node.style) {
+          ret.styles.push({name, value: node.style[name]});
         }
         return ret;
       case Node.TEXT_NODE:

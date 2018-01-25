@@ -7,9 +7,13 @@ type alias Attribute =
     ( String, String )
 
 
+type alias Style =
+    ( String, String )
+
+
 type Node
     = Comment String
-    | Element String (List Attribute) (List Node)
+    | Element String (List Attribute) (List Style) (List Node)
     | Text String
 
 
@@ -18,8 +22,8 @@ decodeValue =
     Decode.decodeValue decoder
 
 
-attributeDecoder : Decoder Attribute
-attributeDecoder =
+attributeOrStyleDecoder : Decoder Attribute
+attributeOrStyleDecoder =
     Decode.map2 (,)
         (Decode.field "name" Decode.string)
         (Decode.field "value" Decode.string)
@@ -35,9 +39,10 @@ decoder =
                         Decode.map Comment <| Decode.field "value" Decode.string
 
                     "element" ->
-                        Decode.map3 Element
+                        Decode.map4 Element
                             (Decode.field "name" Decode.string)
-                            (Decode.field "attributes" (Decode.list attributeDecoder))
+                            (Decode.field "attributes" (Decode.list attributeOrStyleDecoder))
+                            (Decode.field "styles" (Decode.list attributeOrStyleDecoder))
                             (Decode.field "children" (Decode.list decoder))
 
                     "text" ->

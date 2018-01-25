@@ -45,7 +45,7 @@ generate node options =
                 |> List.map (\line -> "-- " ++ String.trim line)
                 |> String.join "\n"
 
-        Element name attributes children ->
+        Element name attributes styles children ->
             let
                 a =
                     -- Special case.
@@ -57,7 +57,21 @@ generate node options =
                         "node " ++ toString name
 
                 b =
+                    case styles of
+                        [] ->
+                            ""
+
+                        _ ->
+                            "style ["
+                                ++ (styles
+                                        |> List.map (\( name, value ) -> "( " ++ toString name ++ ", " ++ toString value ++ " )")
+                                        |> String.join ", "
+                                   )
+                                ++ "]"
+
+                c =
                     attributes
+                        |> List.filter (\( name, _ ) -> name /= "style")
                         |> List.map
                             (\( name, value ) ->
                                 if name == "type" then
@@ -76,9 +90,10 @@ generate node options =
                                 else
                                     "attribute " ++ toString name ++ " " ++ toString value
                             )
+                        |> (\string -> string ++ [ b ])
                         |> String.join ", "
 
-                c =
+                d =
                     children
                         |> List.map
                             (\node ->
@@ -128,7 +143,7 @@ generate node options =
                             ( _, True ) ->
                                 "[ " ++ string ++ "\n]"
             in
-            [ a, nested b False, nested c True ] |> String.join "\n"
+            [ a, nested c False, nested d True ] |> String.join "\n"
 
         Text value ->
             "text "
