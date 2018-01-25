@@ -13,7 +13,11 @@ toString line =
             value
 
         Comment value ->
-            "-- " ++ String.trim value
+            value
+                |> String.trim
+                |> String.split "\n"
+                |> List.map (\line -> "-- " ++ String.trim line)
+                |> String.join "\n"
 
 
 toElm : List Line -> String
@@ -26,7 +30,7 @@ toElm lines =
             "[ " ++ value ++ " ]"
 
         [ Comment value ] ->
-            "[] -- " ++ String.trim value
+            "[] " ++ toString (Comment value)
 
         _ ->
             lines
