@@ -52,6 +52,7 @@ app.ports.init.subscribe(() => {
   html.session.setMode('ace/mode/html');
   // Disable warnings.
   html.session.setUseWorker(false);
+  html.setShowPrintMargin(false);
   html.getSession().on('change', function(e) {
     app.ports.receive.send(parse(html.getValue()));
   });
@@ -59,6 +60,7 @@ app.ports.init.subscribe(() => {
   const elm = ace.edit('elm');
   elm.session.setMode('ace/mode/elm');
   elm.setReadOnly(true);
+  elm.setShowPrintMargin(false);
 });
 
 app.ports.send.subscribe(elm => {
