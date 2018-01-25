@@ -114,22 +114,35 @@ generate node options =
                                     _ ->
                                         True
                             )
-                        |> List.indexedMap
-                            (\i node ->
+                        |> List.foldl
+                            (\node ( nodes, ( i, first ) ) ->
                                 let
                                     prefix =
-                                        case ( i, node ) of
-                                            ( 0, _ ) ->
+                                        case ( node, i, first ) of
+                                            ( _, 0, _ ) ->
                                                 ""
 
-                                            ( _, Comment _ ) ->
+                                            ( Comment _, _, _ ) ->
                                                 ""
+
+                                            ( _, _, True ) ->
+                                                "  "
 
                                             _ ->
                                                 ", "
+
+                                    nextFirst =
+                                        case node of
+                                            Comment _ ->
+                                                first
+
+                                            _ ->
+                                                False
                                 in
-                                prefix ++ generate node options
+                                ( nodes ++ [ prefix ++ generate node options ], ( i + 1, nextFirst ) )
                             )
+                            ( [], ( 0, True ) )
+                        |> Tuple.first
                         |> String.join "\n"
 
                 nested string newline =
