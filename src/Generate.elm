@@ -60,15 +60,19 @@ generate node options =
                     attributes
                         |> List.map
                             (\( name, value ) ->
-                                (if name == "type" then
-                                    "type_"
-                                 else if Set.member name stringAttributes then
-                                    name
-                                 else
-                                    "attribute " ++ toString name
-                                )
-                                    ++ " "
-                                    ++ toString value
+                                if name == "type" then
+                                    "type_ " ++ toString value
+                                else if Set.member name stringAttributes then
+                                    name ++ " " ++ toString value
+                                else if Set.member name intAttributes then
+                                    case String.toInt value of
+                                        Ok int ->
+                                            name ++ " " ++ toString int
+
+                                        Err _ ->
+                                            "attribute " ++ toString name ++ " " ++ toString value
+                                else
+                                    "attribute " ++ toString name ++ " " ++ toString value
                             )
                         |> String.join ", "
 
@@ -171,6 +175,20 @@ stringAttributes =
         media method min name pattern ping placeholder poster preload pubdate
         rel sandbox scope shape src srcdoc srclang step target title usemap
         value wrap
+    """
+
+
+
+-- $ curl https://raw.githubusercontent.com/elm-lang/html/76b88764512b0469182717609406fa9a224d253d/src/Html/Attributes.elm | \
+--   grep '^[a-zA-Z]\+ : Int -> Attribute msg$' | \
+--   cut -d: -f1 | sort | xargs
+
+
+intAttributes : Set String
+intAttributes =
+    Set.fromList <| String.words <| """
+        cols colspan height maxlength minlength rows rowspan size span start
+        tabindex width
     """
 
 
