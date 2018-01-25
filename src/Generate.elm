@@ -144,7 +144,11 @@ generate node options =
                             ( _, True ) ->
                                 "[ " ++ string ++ "\n]"
             in
-            [ a, nested c False, nested d True ] |> String.join "\n"
+            [ a
+            , nested c False
+            , nested d ((d |> String.lines |> List.length) > 1)
+            ]
+                |> String.join "\n"
 
         Text value ->
             "text "
