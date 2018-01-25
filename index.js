@@ -58,7 +58,7 @@ app.ports.init.subscribe(() => {
   });
 
   requestAnimationFrame(() => {
-    html.setValue(`<div id=container class=column>
+    html.setValue(`<div id=container class=column style="display: flex; font-size: 14px;">
   <header>
     <a href="/">Home</a>
     <a href="/contact-us">Contact Us</a>
